@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Enums\EmploymentStatus;
+use App\Enums\Role;
 use App\Models\Concerns\Auditable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,7 +27,6 @@ class Employee extends Model
         'hire_date',
         'end_date',
         'employment_status',
-        'is_active',
         'address',
     ];
 
@@ -68,5 +69,21 @@ class Employee extends Model
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        $own = $user->employee;
+
+        return match ($user->role) {
+            Role::Hr, Role::SuperAdmin => $query,
+            Role::Atasan => $own
+                ? $query->where(fn($q) => $q->where('manager_id', $own->id)->orWhere('id', $own->id))
+                : $query->whereRaw('1 = 0'),
+            Role::Karyawan => $own
+                ? $query->where('id', $own->id)
+                : $query->whereRaw('1 = 0'),
+            default => $query->whereRaw('1 = 0'),
+        };
     }
 }
