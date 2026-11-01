@@ -9,6 +9,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -24,8 +25,8 @@ class EmployeeController extends Controller
         $employees = Employee::query()
             ->visibleTo($request->user())
             ->with(self::WITH)
-            ->when($search !== '', fn ($q) => $q->where(
-                fn ($q) => $q->where('full_name', 'like', "%{$search}%")
+            ->when($search !== '', fn($q) => $q->where(
+                fn($q) => $q->where('full_name', 'like', "%{$search}%")
                     ->orWhere('employee_number', 'like', "%{$search}%")
             ))
             ->orderBy('full_name')
@@ -70,7 +71,19 @@ class EmployeeController extends Controller
     {
         Gate::authorize('update', $employee);
 
-        $employee->forceFill(['is_active' => $active])->save();
+        if (!$active && $employee->user_id !== null && $employee->user_id === request()->user()->id) {
+            abort(422, 'Tidak bisa menonaktifkan akun sendiri.');
+        }
+
+        DB::transaction(function () use ($employee, $active) {
+            $employee->forceFill(['is_active' => $active])->save();
+
+            // Karyawan nonaktif = akun login terkunci. Mengaktifkan lagi TIDAK
+            // membuka akun otomatis; itu harus dilakukan sengaja.
+            if (!$active && $employee->user) {
+                $employee->user->forceFill(['is_active' => false])->save();
+            }
+        });
 
         return new EmployeeResource($employee->load(self::WITH));
     }
