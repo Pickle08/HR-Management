@@ -30,9 +30,10 @@ class LeaveBalanceController extends Controller
 
         $balances = LeaveBalance::query()
             ->visibleTo($request->user())
+            ->withUsage()
             ->with(self::WITH)
             ->where('year', $filters['year'] ?? now()->year)
-            ->when($filters['employee_id'] ?? null, fn ($q, $v) => $q->where('employee_id', $v))
+            ->when($filters['employee_id'] ?? null, fn($q, $v) => $q->where('employee_id', $v))
             ->orderBy('employee_id')
             ->orderBy('leave_type_id')
             ->paginate(20)
@@ -51,7 +52,7 @@ class LeaveBalanceController extends Controller
             ['entitled_days' => $data['entitled_days']],
         );
 
-        return new LeaveBalanceResource($balance->load(self::WITH));
+        return new LeaveBalanceResource($balance->load(self::WITH)->loadUsage());
     }
 
     /** Bikin jatah satu tahun untuk semua karyawan aktif x jenis cuti aktif. Aman dipanggil berulang. */
