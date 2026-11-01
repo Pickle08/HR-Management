@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class Audit
 {
     /** Field yang nilainya tidak boleh pernah masuk log. */
-    private const MASKED = ['password', 'remember_token'];
+    private const MASKED = ['password', 'remember_token', 'nik', 'phone'];
 
     public static function record(
         string $action,
