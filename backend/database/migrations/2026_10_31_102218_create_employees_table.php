@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->foreignId('position_id')->constrained()->restrictOnDelete();
             $table->string('employee_number', 20)->unique();
             $table->string('full_name', 150)->index();
-            $table->text('nik')->nullable();    // terenkripsi, jadi text
-            $table->text('phone')->nullable();  // terenkripsi, jadi text
+            $table->text('nik')->nullable();
+            $table->text('phone')->nullable();
             $table->date('birth_date')->nullable();
             $table->date('hire_date');
             $table->date('end_date')->nullable();
