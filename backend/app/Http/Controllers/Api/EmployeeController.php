@@ -75,6 +75,10 @@ class EmployeeController extends Controller
             abort(422, 'Tidak bisa menonaktifkan akun sendiri.');
         }
 
+        if (!$active && $employee->subordinates()->where('is_active', true)->exists()) {
+            abort(409, 'Karyawan ini masih punya bawahan aktif. Pindahkan bawahannya dulu.');
+        }
+
         DB::transaction(function () use ($employee, $active) {
             $employee->forceFill(['is_active' => $active])->save();
 

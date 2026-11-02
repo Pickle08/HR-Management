@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\LeaveRequestController;
 use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\CandidateController;
 use App\Http\Controllers\Api\JobOpeningController;
+use App\Http\Controllers\Api\AccountController;
+use App\Http\Controllers\Api\PasswordController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
@@ -50,4 +52,13 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::apiResource('candidates', CandidateController::class)->except('destroy');
     Route::post('/candidates/{candidate}/move', [CandidateController::class, 'move']);
     Route::post('/candidates/{candidate}/convert', [CandidateController::class, 'convert']);
+
+    Route::put('/user/password', [PasswordController::class, 'update'])->middleware('throttle:5,1');
+
+    Route::get('/accounts', [AccountController::class, 'index']);
+    Route::post('/accounts', [AccountController::class, 'store']);
+    Route::put('/accounts/{user}/role', [AccountController::class, 'changeRole']);
+    Route::post('/accounts/{user}/lock', [AccountController::class, 'lock']);
+    Route::post('/accounts/{user}/unlock', [AccountController::class, 'unlock']);
+    Route::post('/accounts/{user}/reset-password', [AccountController::class, 'resetPassword']);
 });
