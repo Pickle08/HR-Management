@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\LeaveBalanceController;
 use App\Http\Controllers\Api\LeaveTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\CandidateController;
+use App\Http\Controllers\Api\JobOpeningController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
@@ -32,4 +34,11 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::post('/leave-requests/{leaveRequest}/approve', [LeaveRequestController::class, 'approve']);
     Route::post('/leave-requests/{leaveRequest}/reject', [LeaveRequestController::class, 'reject']);
     Route::post('/leave-requests/{leaveRequest}/cancel', [LeaveRequestController::class, 'cancel']);
+
+    Route::apiResource('job-openings', JobOpeningController::class)->except('destroy');
+    Route::post('/job-openings/{jobOpening}/close', [JobOpeningController::class, 'close']);
+
+    Route::apiResource('candidates', CandidateController::class)->except('destroy');
+    Route::post('/candidates/{candidate}/move', [CandidateController::class, 'move']);
+    Route::post('/candidates/{candidate}/convert', [CandidateController::class, 'convert']);
 });

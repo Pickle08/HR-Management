@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ActiveManager;
 use App\Enums\EmploymentStatus;
 use App\Models\Employee;
 use Closure;
@@ -25,9 +26,12 @@ class SaveEmployeeRequest extends FormRequest
 
         return [
             'manager_id' => [
-                'nullable', 'integer', 'exists:employees,id',
+                'nullable',
+                'integer',
+                'exists:employees,id',
+                new ActiveManager,
                 function (string $attribute, mixed $value, Closure $fail) use ($employee) {
-                    if ($value === null || ! $employee) {
+                    if ($value === null || !$employee) {
                         return;
                     }
 
@@ -35,7 +39,7 @@ class SaveEmployeeRequest extends FormRequest
                     $seen = [];
                     $current = (int) $value;
 
-                    while ($current !== 0 && ! in_array($current, $seen, true)) {
+                    while ($current !== 0 && !in_array($current, $seen, true)) {
                         if ($current === $employee->id) {
                             $fail('Atasan tidak boleh membentuk siklus.');
 
@@ -50,7 +54,9 @@ class SaveEmployeeRequest extends FormRequest
             'department_id' => ['required', 'integer', 'exists:departments,id'],
             'position_id' => ['required', 'integer', 'exists:positions,id'],
             'employee_number' => [
-                'required', 'string', 'max:20',
+                'required',
+                'string',
+                'max:20',
                 Rule::unique('employees', 'employee_number')->ignore($employee?->id),
             ],
             'full_name' => ['required', 'string', 'max:150'],
