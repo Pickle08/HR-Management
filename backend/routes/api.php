@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\LeaveBalanceController;
 use App\Http\Controllers\Api\LeaveTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\CandidateController;
 use App\Http\Controllers\Api\JobOpeningController;
 
@@ -34,6 +35,14 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::post('/leave-requests/{leaveRequest}/approve', [LeaveRequestController::class, 'approve']);
     Route::post('/leave-requests/{leaveRequest}/reject', [LeaveRequestController::class, 'reject']);
     Route::post('/leave-requests/{leaveRequest}/cancel', [LeaveRequestController::class, 'cancel']);
+
+    Route::get('/payrolls', [PayrollController::class, 'index']);
+    Route::post('/payrolls', [PayrollController::class, 'store']);
+    Route::get('/payrolls/{payroll}', [PayrollController::class, 'show']);
+    Route::delete('/payrolls/{payroll}', [PayrollController::class, 'destroy']);
+    Route::put('/payrolls/{payroll}/items', [PayrollController::class, 'updateItems']);
+    Route::post('/payrolls/{payroll}/finalize', [PayrollController::class, 'finalize']);
+    Route::post('/payrolls/{payroll}/adjustments', [PayrollController::class, 'adjust']);
 
     Route::apiResource('job-openings', JobOpeningController::class)->except('destroy');
     Route::post('/job-openings/{jobOpening}/close', [JobOpeningController::class, 'close']);

@@ -39,10 +39,10 @@ class PayrollController extends Controller
             ->visibleTo($request->user())
             ->withTotals()
             ->with(self::WITH)
-            ->when($filters['year'] ?? null, fn ($q, $v) => $q->where('year', $v))
-            ->when($filters['month'] ?? null, fn ($q, $v) => $q->where('month', $v))
-            ->when($filters['employee_id'] ?? null, fn ($q, $v) => $q->where('employee_id', $v))
-            ->when($filters['status'] ?? null, fn ($q, $v) => $q->where('status', $v))
+            ->when($filters['year'] ?? null, fn($q, $v) => $q->where('year', $v))
+            ->when($filters['month'] ?? null, fn($q, $v) => $q->where('month', $v))
+            ->when($filters['employee_id'] ?? null, fn($q, $v) => $q->where('employee_id', $v))
+            ->when($filters['status'] ?? null, fn($q, $v) => $q->where('status', $v))
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->orderBy('employee_id')
@@ -101,7 +101,7 @@ class PayrollController extends Controller
     {
         return new PayrollResource($payroll->load([
             ...self::WITH,
-            'items' => fn ($q) => $q->orderBy('id'),
+            'items' => fn($q) => $q->orderBy('id'),
         ]));
     }
 }
