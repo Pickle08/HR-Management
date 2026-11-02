@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\CandidateController;
 use App\Http\Controllers\Api\JobOpeningController;
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\PasswordController;
+use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\PositionController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
@@ -61,4 +63,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::post('/accounts/{user}/lock', [AccountController::class, 'lock']);
     Route::post('/accounts/{user}/unlock', [AccountController::class, 'unlock']);
     Route::post('/accounts/{user}/reset-password', [AccountController::class, 'resetPassword']);
+
+    Route::apiResource('departments', DepartmentController::class)->except('show');
+    Route::apiResource('positions', PositionController::class)->except('show');
 });
