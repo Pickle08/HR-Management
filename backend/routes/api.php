@@ -14,12 +14,14 @@ use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\PositionController;
+use App\Http\Controllers\Api\DashboardController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
 Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'me']);
+    Route::get('/dashboard', DashboardController::class);
 
     Route::apiResource('employees', EmployeeController::class)->except('destroy');
     Route::post('/employees/{employee}/deactivate', [EmployeeController::class, 'deactivate']);
