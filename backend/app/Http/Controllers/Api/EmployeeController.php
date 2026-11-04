@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveEmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
@@ -13,7 +15,15 @@ use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
-    private const WITH = ['department:id,name', 'position:id,name'];
+    private const WITH = [
+        'department:id,name',
+        'position:id,name',
+        'manager:id,full_name',
+        'province:code,name',
+        'regency:code,name',
+        'district:code,name',
+        'village:code,name',
+    ];
 
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -34,6 +44,27 @@ class EmployeeController extends Controller
             ->withQueryString();
 
         return EmployeeResource::collection($employees);
+    }
+
+    /** Pilihan atasan untuk formulir: persis kriteria ActiveManager, hanya field minimal. */
+    public function managers(Request $request): JsonResponse
+    {
+        Gate::authorize('create', Employee::class);
+
+        $search = trim((string) $request->query('search'));
+
+        $managers = Employee::query()
+            ->where('is_active', true)
+            ->whereHas('user', fn ($q) => $q->where('is_active', true)->where('role', Role::Atasan->value))
+            ->when($search !== '', fn ($q) => $q->where(
+                fn ($q) => $q->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('employee_number', 'like', "%{$search}%")
+            ))
+            ->orderBy('full_name')
+            ->limit(50)
+            ->get(['id', 'employee_number', 'full_name']);
+
+        return response()->json(['data' => $managers]);
     }
 
     public function show(Employee $employee): EmployeeResource

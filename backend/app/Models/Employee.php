@@ -28,6 +28,10 @@ class Employee extends Model
         'end_date',
         'employment_status',
         'address',
+        'province_code',
+        'regency_code',
+        'district_code',
+        'village_code',
     ];
 
     // Aman secara default: nik tidak ikut keluar di JSON kecuali diminta eksplisit.
@@ -69,6 +73,26 @@ class Employee extends Model
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function province(): BelongsTo
+    {
+        return $this->belongsTo(Province::class, 'province_code', 'code');
+    }
+
+    public function regency(): BelongsTo
+    {
+        return $this->belongsTo(Regency::class, 'regency_code', 'code');
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_code', 'code');
+    }
+
+    public function village(): BelongsTo
+    {
+        return $this->belongsTo(Village::class, 'village_code', 'code');
     }
 
     public function scopeVisibleTo(Builder $query, User $user): Builder

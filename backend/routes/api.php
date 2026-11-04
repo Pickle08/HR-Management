@@ -28,6 +28,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::get('/regions/{level}', [RegionController::class, 'index'])
         ->whereIn('level', ['provinces', 'regencies', 'districts', 'villages']);
 
+    Route::get('/employees/managers', [EmployeeController::class, 'managers']);
     Route::apiResource('employees', EmployeeController::class)->except('destroy');
     Route::post('/employees/{employee}/deactivate', [EmployeeController::class, 'deactivate']);
     Route::post('/employees/{employee}/activate', [EmployeeController::class, 'activate']);

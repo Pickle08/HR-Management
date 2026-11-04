@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { useAuth } from '../auth/AuthContext'
+import { useAuth } from '../auth/useAuth'
 import { ErrorBox, SectionTitle, Skeleton } from '../components/ui'
 import { api } from '../lib/api'
 import { fmtDate, MONTHS } from '../lib/format'

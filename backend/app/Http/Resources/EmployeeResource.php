@@ -21,6 +21,10 @@ class EmployeeResource extends JsonResource
             'end_date' => $this->end_date?->toDateString(),
             'is_active' => $this->is_active,
             'manager_id' => $this->manager_id,
+            'manager' => $this->whenLoaded('manager', fn () => [
+                'id' => $this->manager->id,
+                'full_name' => $this->manager->full_name,
+            ]),
             'department' => $this->whenLoaded('department', fn () => [
                 'id' => $this->department->id,
                 'name' => $this->department->name,
@@ -29,12 +33,22 @@ class EmployeeResource extends JsonResource
                 'id' => $this->position->id,
                 'name' => $this->position->name,
             ]),
-            // Field sensitif cuma keluar kalau policy mengizinkan.
+            // Field sensitif (termasuk wilayah alamat) cuma keluar kalau policy mengizinkan.
             $this->mergeWhen($canSeeSensitive, fn () => [
                 'nik' => $this->nik,
                 'phone' => $this->phone,
                 'birth_date' => $this->birth_date?->toDateString(),
                 'address' => $this->address,
+                'province_code' => $this->province_code,
+                'regency_code' => $this->regency_code,
+                'district_code' => $this->district_code,
+                'village_code' => $this->village_code,
+                'region' => $this->relationLoaded('village') ? [
+                    'province' => $this->province?->name,
+                    'regency' => $this->regency?->name,
+                    'district' => $this->district?->name,
+                    'village' => $this->village?->name,
+                ] : null,
             ]),
         ];
     }

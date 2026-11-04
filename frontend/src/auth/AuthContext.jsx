@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, setSessionExpiredHandler } from "../lib/api";
-
-const AuthContext = createContext(null);
+import { AuthContext } from "./useAuth";
 
 export function AuthProvider({ children }) {
     const queryClient = useQueryClient();
@@ -48,7 +47,7 @@ export function AuthProvider({ children }) {
         try {
             await api.post("/api/logout");
         } catch (err) {
-            // 401 = session sudah habis di server, tetap lanjut bersihin state lokal.
+            // 401 = session sudah habis diserver, tetap lanjut bersihin state lokal.
             if (err.response?.status !== 401) throw err;
         }
 
@@ -64,8 +63,4 @@ export function AuthProvider({ children }) {
             {children}
         </AuthContext.Provider>
     );
-}
-
-export function useAuth() {
-    return useContext(AuthContext);
 }

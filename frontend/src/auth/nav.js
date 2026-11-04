@@ -5,7 +5,7 @@ const NOT_FINANCE = ['super_admin', 'atasan', 'hr', 'karyawan']
 // Ini cuma soal tampilan menu: yang menjaga data tetap policy di backend.
 export const NAV_ITEMS = [
   { path: '/', label: 'Dashboard', roles: ALL, built: true },
-  { path: '/employees', label: 'Karyawan', roles: NOT_FINANCE, built: false },
+  { path: '/employees', label: 'Karyawan', roles: NOT_FINANCE, built: true },
   { path: '/attendance', label: 'Absensi', roles: NOT_FINANCE, built: false },
   { path: '/leave', label: 'Cuti', roles: NOT_FINANCE, built: false },
   { path: '/payroll', label: 'Payroll & Slip', roles: ['hr', 'finance', 'atasan', 'karyawan'], built: false },

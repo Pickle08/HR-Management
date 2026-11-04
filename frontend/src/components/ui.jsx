@@ -56,3 +56,57 @@ export function Skeleton() {
     </div>
   )
 }
+
+export const inputClass =
+  'mt-1 w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm disabled:bg-slate-100'
+
+export function Field({ label, error, hint, children }) {
+  return (
+    <label className="block text-sm">
+      <span className="text-slate-700">{label}</span>
+      {children}
+      {hint && !error && <span className="mt-1 block text-xs text-slate-500">{hint}</span>}
+      {error && (
+        <span className="mt-1 block text-xs text-red-600" role="alert">
+          {error}
+        </span>
+      )}
+    </label>
+  )
+}
+
+export function Badge({ tone = 'default', children }) {
+  const tones = {
+    default: 'bg-slate-100 text-slate-700',
+    good: 'bg-green-100 text-green-800',
+    bad: 'bg-red-100 text-red-800',
+  }
+
+  return <span className={`inline-block rounded px-2 py-0.5 text-xs ${tones[tone]}`}>{children}</span>
+}
+
+export function Pagination({ meta, onPage }) {
+  if (!meta || meta.last_page <= 1) return null
+
+  const button = 'rounded border border-slate-300 bg-white px-3 py-1 disabled:opacity-40'
+
+  return (
+    <div className="flex items-center justify-between text-sm">
+      <span className="text-slate-500">
+        Halaman {meta.current_page} dari {meta.last_page} ({meta.total} data)
+      </span>
+      <div className="flex gap-2">
+        <button className={button} disabled={meta.current_page <= 1} onClick={() => onPage(meta.current_page - 1)}>
+          Sebelumnya
+        </button>
+        <button
+          className={button}
+          disabled={meta.current_page >= meta.last_page}
+          onClick={() => onPage(meta.current_page + 1)}
+        >
+          Berikutnya
+        </button>
+      </div>
+    </div>
+  )
+}
