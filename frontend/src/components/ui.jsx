@@ -110,3 +110,46 @@ export function Pagination({ meta, onPage }) {
     </div>
   )
 }
+
+export function Dialog({ title, children, onClose }) {
+  return (
+    <div
+      className="fixed inset-0 z-20 flex items-center justify-center bg-black/40 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+    >
+      <div className="w-full max-w-md space-y-3 rounded-lg bg-white p-4 shadow-lg">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold">{title}</h2>
+          <button onClick={onClose} aria-label="Tutup" className="text-slate-500">
+            ✕
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+export function Tabs({ tabs, value, onChange }) {
+  return (
+    <div className="flex gap-1 border-b border-slate-200" role="tablist">
+      {tabs.map((tab) => (
+        <button
+          key={tab.key}
+          role="tab"
+          aria-selected={value === tab.key}
+          onClick={() => onChange(tab.key)}
+          className={`-mb-px border-b-2 px-3 py-2 text-sm ${
+            value === tab.key
+              ? 'border-slate-900 font-medium text-slate-900'
+              : 'border-transparent text-slate-500'
+          }`}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  )
+}

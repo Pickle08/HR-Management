@@ -16,3 +16,13 @@ export const STAGE_LABEL = {
   interview: 'Wawancara',
   offer: 'Penawaran',
 }
+
+// Samakan nilainya dengan backend: cat backend/app/Enums/LeaveStatus.php
+export const LEAVE_STATUS_LABEL = {
+  pending: 'Menunggu',
+  approved: 'Disetujui',
+  rejected: 'Ditolak',
+  cancelled: 'Dibatalkan',
+}
+
+export const LEAVE_STATUS_TONE = { approved: 'good', rejected: 'bad' }

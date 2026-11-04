@@ -6,8 +6,8 @@ const NOT_FINANCE = ['super_admin', 'atasan', 'hr', 'karyawan']
 export const NAV_ITEMS = [
   { path: '/', label: 'Dashboard', roles: ALL, built: true },
   { path: '/employees', label: 'Karyawan', roles: NOT_FINANCE, built: true },
-  { path: '/attendance', label: 'Absensi', roles: NOT_FINANCE, built: false },
-  { path: '/leave', label: 'Cuti', roles: NOT_FINANCE, built: false },
+  { path: '/attendance', label: 'Absensi', roles: NOT_FINANCE, built: true },
+  { path: '/leave', label: 'Cuti', roles: NOT_FINANCE, built: true },
   { path: '/payroll', label: 'Payroll & Slip', roles: ['hr', 'finance', 'atasan', 'karyawan'], built: false },
   { path: '/recruitment', label: 'Rekrutmen', roles: ['hr', 'super_admin'], built: false },
   { path: '/reports', label: 'Laporan', roles: ['hr', 'finance', 'atasan', 'super_admin'], built: false },

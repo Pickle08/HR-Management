@@ -22,3 +22,13 @@ export function fmtDate(iso) {
     year: 'numeric',
   })
 }
+
+export const toIso = (date) => date.toLocaleDateString('en-CA')
+
+export const todayIso = () => toIso(new Date())
+
+export const monthStartIso = () => {
+  const now = new Date()
+
+  return toIso(new Date(now.getFullYear(), now.getMonth(), 1))
+}

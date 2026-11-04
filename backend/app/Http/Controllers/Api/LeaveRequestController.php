@@ -16,7 +16,7 @@ use Illuminate\Validation\Rule;
 class LeaveRequestController extends Controller
 {
     private const WITH = [
-        'employee:id,employee_number,full_name',
+        'employee:id,employee_number,full_name,manager_id',
         'leaveType:id,name',
         'decider:id,name',
         'canceller:id,name',
