@@ -1,11 +1,25 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../lib/api";
+import { api, setSessionExpiredHandler } from "../lib/api";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
     const queryClient = useQueryClient();
+
+    const [notice, setNotice] = useState("");
+
+    useEffect(() => {
+        setSessionExpiredHandler((message) => {
+            setNotice(message || "Sesi Anda berakhir. Silakan masuk lagi.");
+            queryClient.setQueryData(["me"], null);
+            queryClient.removeQueries({
+                predicate: (q) => q.queryKey[0] !== "me",
+            });
+        });
+
+        return () => setSessionExpiredHandler(null);
+    }, [queryClient]);
 
     // Satu sumber kebenaran: siapa yang sedang login menurut server.
     const { data: user, isLoading } = useQuery({
@@ -24,6 +38,7 @@ export function AuthProvider({ children }) {
     });
 
     async function login(email, password) {
+        setNotice("");
         await api.get("/sanctum/csrf-cookie");
         const { data } = await api.post("/api/login", { email, password });
         queryClient.setQueryData(["me"], data);
@@ -45,7 +60,7 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider
-            value={{ user: user ?? null, isLoading, login, logout }}>
+            value={{ user: user ?? null, isLoading, notice, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
