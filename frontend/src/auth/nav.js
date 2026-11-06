@@ -12,7 +12,7 @@ export const NAV_ITEMS = [
         path: "/payroll",
         label: "Payroll & Slip",
         roles: ["hr", "finance", "atasan", "karyawan"],
-        built: false,
+        built: true,
     },
     {
         path: "/recruitment",
