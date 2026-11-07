@@ -276,5 +276,10 @@ describe("EmployeeForm", () => {
             ),
         );
         expect(api.post).not.toHaveBeenCalled();
+        await waitFor(() =>
+            expect(screen.getByTestId("location")).toHaveTextContent(
+                "/employees/5",
+            ),
+        );
     });
 });
