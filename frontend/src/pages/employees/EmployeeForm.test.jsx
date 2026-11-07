@@ -180,6 +180,43 @@ describe("EmployeeForm", () => {
         expect(api.post).not.toHaveBeenCalled();
     });
 
+    it("shows the server message on a 500 and re-enables the save button", async () => {
+        api.post.mockRejectedValue({
+            response: { status: 500, data: { message: "Server Error" } },
+        });
+        renderCreate();
+
+        await fillRequired();
+        fireEvent.click(screen.getByRole("button", { name: "Simpan" }));
+
+        expect(await screen.findByRole("alert")).toHaveTextContent(
+            "Server Error",
+        );
+        await waitFor(() =>
+            expect(
+                screen.getByRole("button", { name: "Simpan" }),
+            ).toBeEnabled(),
+        );
+        expect(label("Nomor karyawan")).toHaveValue("EMP-100");
+    });
+
+    it("falls back to a generic message when the network is down", async () => {
+        api.post.mockRejectedValue(new Error("Network Error"));
+        renderCreate();
+
+        await fillRequired();
+        fireEvent.click(screen.getByRole("button", { name: "Simpan" }));
+
+        expect(await screen.findByRole("alert")).toHaveTextContent(
+            "Gagal menyimpan. Coba lagi.",
+        );
+        await waitFor(() =>
+            expect(
+                screen.getByRole("button", { name: "Simpan" }),
+            ).toBeEnabled(),
+        );
+    });
+
     it("shows server validation errors under their fields, keeps the input, and clears an error when edited", async () => {
         api.post.mockRejectedValue({
             response: {
