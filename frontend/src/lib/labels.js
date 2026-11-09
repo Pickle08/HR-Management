@@ -24,6 +24,8 @@ export const STAGE_LABEL = {
     screening: "Seleksi",
     interview: "Wawancara",
     offer: "Penawaran",
+    accepted: "Diterima",
+    rejected: "Ditolak",
 };
 
 // Samakan nilainya dengan backend: cat backend/app/Enums/LeaveStatus.php
