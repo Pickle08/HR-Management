@@ -1,6 +1,8 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { api } from "../lib/api";
+import { fmtDate } from "../lib/format";
 import { renderWithProviders } from "../test/utils";
 import Dashboard from "./Dashboard";
 
@@ -151,5 +153,54 @@ describe("Dashboard", () => {
         expect(
             await screen.findByRole("button", { name: /coba lagi|ulang/i }),
         ).toBeInTheDocument();
+    });
+
+    it("does not reuse one user's cached dashboard for another user", async () => {
+        const payload = (date) => ({
+            data: { data: { date, role: "hr", me: ME, hr: {} } },
+        });
+        const client = new QueryClient({
+            defaultOptions: { queries: { retry: false } },
+        });
+        // Elemen baru tiap kali, supaya rerender tidak di-skip React.
+        const tree = () => (
+            <QueryClientProvider client={client}>
+                <Dashboard />
+            </QueryClientProvider>
+        );
+
+        auth.role = "hr";
+        auth.id = 1;
+        api.get.mockResolvedValueOnce(payload("2026-11-09"));
+        const { rerender } = render(tree());
+        expect(
+            await screen.findByText(fmtDate("2026-11-09")),
+        ).toBeInTheDocument();
+        expect(api.get).toHaveBeenCalledTimes(1);
+
+        // User lain login di client yang sama: harus fetch sendiri.
+        auth.id = 2;
+        api.get.mockResolvedValueOnce(payload("2026-11-10"));
+        rerender(tree());
+
+        expect(
+            await screen.findByText(fmtDate("2026-11-10")),
+        ).toBeInTheDocument();
+        expect(api.get).toHaveBeenCalledTimes(2);
+        expect(
+            screen.queryByText(fmtDate("2026-11-09")),
+        ).not.toBeInTheDocument();
+
+        // Kembali ke user 1: tidak boleh menampilkan data user 2.
+        auth.id = 1;
+        api.get.mockResolvedValueOnce(payload("2026-11-09"));
+        rerender(tree());
+
+        expect(
+            await screen.findByText(fmtDate("2026-11-09")),
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByText(fmtDate("2026-11-10")),
+        ).not.toBeInTheDocument();
     });
 });
