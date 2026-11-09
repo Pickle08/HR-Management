@@ -15,15 +15,14 @@ export const NAV_ITEMS = [
         built: true,
     },
     {
-        path: "/recruitment",
-        label: "Rekrutmen",
-        roles: ["hr", "super_admin"],
-        built: false,
-    },
-    {
         path: "/reports",
         label: "Laporan",
         roles: ["hr", "finance", "atasan", "super_admin"],
+    },
+    {
+        path: "/recruitment",
+        label: "Rekrutmen",
+        roles: ["hr", "super_admin"],
         built: false,
     },
     {

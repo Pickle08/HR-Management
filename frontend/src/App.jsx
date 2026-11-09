@@ -11,6 +11,7 @@ import EmployeeForm from "./pages/employees/EmployeeForm";
 import Attendance from "./pages/Attendance";
 import PayrollList from "./pages/payroll/PayrollList";
 import PayrollDetail from "./pages/payroll/PayrollDetail";
+import Reports from "./pages/Reports";
 import Leave from "./pages/Leave";
 
 export default function App() {
@@ -61,6 +62,11 @@ export default function App() {
                             path="/payroll/:id"
                             element={<PayrollDetail />}
                         />
+                    </Route>
+
+                    <Route
+                        element={<RequireRole roles={rolesFor("/reports")} />}>
+                        <Route path="/reports" element={<Reports />} />
                     </Route>
                 </Route>
             </Route>
