@@ -32,6 +32,12 @@ export const NAV_ITEMS = [
         built: false,
     },
     { path: "/accounts", label: "Akun", roles: ["super_admin"], built: false },
+    {
+        path: "/audit-logs",
+        label: "Audit log",
+        roles: ["super_admin"],
+        built: true,
+    },
 ];
 
 export const rolesFor = (path) =>

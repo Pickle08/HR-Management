@@ -15,6 +15,7 @@ import Reports from "./pages/Reports";
 import Recruitment from "./pages/Recruitment";
 import Organization from "./pages/organization/Organization";
 import Accounts from "./pages/accounts/Accounts";
+import AuditLog from "./pages/audit/AuditLog";
 import Leave from "./pages/Leave";
 
 export default function App() {
@@ -92,6 +93,13 @@ export default function App() {
                     <Route
                         element={<RequireRole roles={rolesFor("/accounts")} />}>
                         <Route path="/accounts" element={<Accounts />} />
+                    </Route>
+
+                    <Route
+                        element={
+                            <RequireRole roles={rolesFor("/audit-logs")} />
+                        }>
+                        <Route path="/audit-logs" element={<AuditLog />} />
                     </Route>
                 </Route>
             </Route>

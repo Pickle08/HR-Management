@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RegionController;
+use App\Http\Controllers\Api\AuditLogController;
 
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 
@@ -64,6 +65,9 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::post('/candidates/{candidate}/convert', [CandidateController::class, 'convert']);
 
     Route::put('/user/password', [PasswordController::class, 'update'])->middleware('throttle:5,1');
+
+    Route::get('/audit-logs', [AuditLogController::class, 'index']);
+    Route::get('/audit-logs/actions', [AuditLogController::class, 'actions']);
 
     Route::get('/accounts', [AccountController::class, 'index']);
     Route::post('/accounts', [AccountController::class, 'store']);
