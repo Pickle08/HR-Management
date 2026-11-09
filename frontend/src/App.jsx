@@ -13,6 +13,7 @@ import PayrollList from "./pages/payroll/PayrollList";
 import PayrollDetail from "./pages/payroll/PayrollDetail";
 import Reports from "./pages/Reports";
 import Recruitment from "./pages/Recruitment";
+import Organization from "./pages/organization/Organization";
 import Leave from "./pages/Leave";
 
 export default function App() {
@@ -75,6 +76,16 @@ export default function App() {
                             <RequireRole roles={rolesFor("/recruitment")} />
                         }>
                         <Route path="/recruitment" element={<Recruitment />} />
+                    </Route>
+
+                    <Route
+                        element={
+                            <RequireRole roles={rolesFor("/organization")} />
+                        }>
+                        <Route
+                            path="/organization"
+                            element={<Organization />}
+                        />
                     </Route>
                 </Route>
             </Route>

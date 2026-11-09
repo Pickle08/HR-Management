@@ -1,0 +1,55 @@
+warning: in the working copy of 'frontend/src/test/utils.jsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/frontend/src/test/utils.jsx b/frontend/src/test/utils.jsx[m
+[1mindex 1731f29..6c315ed 100644[m
+[1m--- a/frontend/src/test/utils.jsx[m
+[1m+++ b/frontend/src/test/utils.jsx[m
+[36m@@ -1,25 +1,32 @@[m
+[31m-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'[m
+[31m-import { render } from '@testing-library/react'[m
+[31m-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'[m
+[32m+[m[32mimport { QueryClient, QueryClientProvider } from "@tanstack/react-query";[m
+[32m+[m[32mimport { render } from "@testing-library/react";[m
+[32m+[m[32mimport { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";[m
+ [m
+ // Menampilkan URL saat ini supaya test bisa memeriksa perubahan query string.[m
+ function LocationProbe() {[m
+[31m-  const location = useLocation()[m
+[32m+[m[32m    const location = useLocation();[m
+ [m
+[31m-  return <output data-testid="location">{location.pathname + location.search}</output>[m
+[32m+[m[32m    return ([m
+[32m+[m[32m        <output data-testid="location">[m
+[32m+[m[32m            {location.pathname + location.search}[m
+[32m+[m[32m        </output>[m
+[32m+[m[32m    );[m
+ }[m
+ [m
+[31m-export function renderWithProviders(ui, { route = '/', path = '*' } = {}) {[m
+[31m-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })[m
+[32m+[m[32mexport function renderWithProviders(ui, { route = "/", path = "*" } = {}) {[m
+[32m+[m[32m    const queryClient = new QueryClient({[m
+[32m+[m[32m        defaultOptions: { queries: { retry: false } },[m
+[32m+[m[32m    });[m
+ [m
+[31m-  return render([m
+[31m-    <QueryClientProvider client={queryClient}>[m
+[31m-      <MemoryRouter initialEntries={[route]}>[m
+[31m-        <Routes>[m
+[31m-          <Route path={path} element={ui} />[m
+[31m-        </Routes>[m
+[31m-        <LocationProbe />[m
+[31m-      </MemoryRouter>[m
+[31m-    </QueryClientProvider>,[m
+[31m-  )[m
+[32m+[m[32m    return render([m
+[32m+[m[32m        <QueryClientProvider client={queryClient}>[m
+[32m+[m[32m            <MemoryRouter initialEntries={[route]}>[m
+[32m+[m[32m                <Routes>[m
+[32m+[m[32m                    <Route path={path} element={ui} />[m
+[32m+[m[32m                    <Route path="*" element={null} />[m
+[32m+[m[32m                </Routes>[m
+[32m+[m[32m                <LocationProbe />[m
+[32m+[m[32m            </MemoryRouter>[m
+[32m+[m[32m        </QueryClientProvider>,[m
+[32m+[m[32m    );[m
+ }[m
