@@ -12,6 +12,7 @@ import Attendance from "./pages/Attendance";
 import PayrollList from "./pages/payroll/PayrollList";
 import PayrollDetail from "./pages/payroll/PayrollDetail";
 import Reports from "./pages/Reports";
+import Recruitment from "./pages/Recruitment";
 import Leave from "./pages/Leave";
 
 export default function App() {
@@ -67,6 +68,13 @@ export default function App() {
                     <Route
                         element={<RequireRole roles={rolesFor("/reports")} />}>
                         <Route path="/reports" element={<Reports />} />
+                    </Route>
+
+                    <Route
+                        element={
+                            <RequireRole roles={rolesFor("/recruitment")} />
+                        }>
+                        <Route path="/recruitment" element={<Recruitment />} />
                     </Route>
                 </Route>
             </Route>

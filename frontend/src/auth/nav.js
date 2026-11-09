@@ -23,7 +23,7 @@ export const NAV_ITEMS = [
         path: "/recruitment",
         label: "Rekrutmen",
         roles: ["hr", "super_admin"],
-        built: false,
+        built: true,
     },
     {
         path: "/organization",
